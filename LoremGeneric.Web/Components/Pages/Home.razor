@@ -1,0 +1,108 @@
+﻿@page "/"
+@using System.Text.Json
+@using FightIpsum
+@using FightIpsum.Endpoints.FightIpsum.Services
+@inject IFightIpsumService generator
+@rendermode InteractiveServer
+
+@inject ILogger<Home> Logger
+
+<PageTitle>Fight Ipsum</PageTitle>
+
+<FluentGridItem xs="4">
+</FluentGridItem>
+
+<FluentGridItem xs="4">
+    <div class="card">
+        <EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit" FormName="organization_create" novalidate>
+            <DataAnnotationsValidator />
+            <FluentValidationSummary />
+
+            <FluentStack Orientation="Orientation.Vertical">
+                <div>
+                    <FluentNumberField @bind-Value="Model.Number" Label="# Paragraph" />
+                </div>
+                <div>
+                    <FluentRadioGroup Name="Size" @bind-Value="Model.Size" Label="Size">
+                        <FluentRadio Value=@ParagraphSize.small>Small</FluentRadio>
+                        <FluentRadio Value=@ParagraphSize.medium>Medium</FluentRadio>
+                        <FluentRadio Value=@ParagraphSize.large>Large</FluentRadio>
+                    </FluentRadioGroup>
+                </div>
+                <div>
+                    <FluentSwitch @bind-Value=Model.Japanese Label="Use japanese">
+                        <span slot="checked-message">Japanese</span>
+                        <span slot="unchecked-message">English</span>
+                    </FluentSwitch>
+                </div>
+                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">Generate</FluentButton>
+            </FluentStack>
+        </EditForm>
+    </div>
+</FluentGridItem>
+<FluentGridItem xs="4">
+</FluentGridItem>
+<FluentGridItem xs="3">
+</FluentGridItem>
+
+<FluentGridItem xs="6">
+    <div class="card">
+
+        <div id="generatedText">
+            @foreach (string item in Strings)
+            {
+                <p>
+                    @item
+                </p>
+            }
+        </div>
+
+        <button class="outline" onclick="copyToClipboard()">Copy to clipboard</button>
+
+        <fluent-button type="button" appearance="outline" class="outline" onclick="copyToClipboard()">
+            Outline Copy to clipboard
+        </fluent-button>
+        <FluentButton Appearance="Appearance.Outline" >Outline</FluentButton>
+        <script>
+            function copyToClipboard() {
+                navigator.permissions.query({ name: "clipboard-write" }).then((result) => {
+                    if (result.state === "granted" || result.state === "prompt") {
+                        /* write to the clipboard now */
+                        let text = document.getElementById("generatedText").innerText;
+                        navigator.clipboard.writeText(text);
+                    }
+                });
+            }
+        </script>
+    </div>
+</FluentGridItem>
+<FluentGridItem xs="3">
+</FluentGridItem>
+
+
+@code {
+    [SupplyParameterFromForm]
+    private CreateItem Model { get; set; } = new();
+
+
+    public IEnumerable<string> Strings = Enumerable.Empty<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // shouldRender = true;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+
+        Strings = generator.GenerateLorem(Model.Number, Model.Size, false, Model.Japanese);
+    }
+
+    public class CreateItem
+    {
+        public int Number { get; set; } = 2;
+        public ParagraphSize Size { get; set; } = ParagraphSize.medium;
+        public bool Japanese { get; set; }
+    }
+}
