@@ -57,21 +57,33 @@
             }
         </div>
 
-        <button class="outline" onclick="copyToClipboard()">Copy to clipboard</button>
 
         <fluent-button type="button" appearance="outline" class="outline" onclick="copyToClipboard()">
             Outline Copy to clipboard
         </fluent-button>
-        <FluentButton Appearance="Appearance.Outline" >Outline</FluentButton>
         <script>
             function copyToClipboard() {
-                navigator.permissions.query({ name: "clipboard-write" }).then((result) => {
-                    if (result.state === "granted" || result.state === "prompt") {
-                        /* write to the clipboard now */
-                        let text = document.getElementById("generatedText").innerText;
-                        navigator.clipboard.writeText(text);
-                    }
-                });
+                let text = document.getElementById("generatedText").innerText;
+                navigator.clipboard.writeText(text).then(
+                    () => {
+                        /* clipboard successfully set */
+                        console.log("success");
+                    },
+                    () => {
+                        /* clipboard write failed */
+                        console.log("failure");
+                    },
+                );
+            }
+
+            function copyToClipboard2() {
+                try {
+                    let text = document.getElementById("generatedText").innerText;
+                    navigator.clipboard.writeText(text);
+                }
+                catch (error) {
+                    console.log("cannot use your clipboard");
+                }
             }
         </script>
     </div>
