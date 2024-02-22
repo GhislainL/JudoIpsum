@@ -57,7 +57,9 @@
             }
         </div>
 
-
+        <button type="button" class="btn btn-danger m-1" onclick="changeKanji()">
+            Kanji
+        </button>
         <fluent-button type="button" appearance="outline" class="outline" onclick="copyToClipboard()">
             Outline Copy to clipboard
         </fluent-button>
@@ -85,6 +87,17 @@
                     console.log("cannot use your clipboard");
                 }
             }
+
+            function changeKanji() {
+                var k = document.getElementById("kanji");
+                console.log(k.src);
+                if (k.src.endsWith("jujitsu-kanji.png")) {
+                    k.src = "/images/judo-kanji.png";
+                }
+                else {
+                    k.src = "/images/jujitsu-kanji.png";
+                }
+            }
         </script>
     </div>
 </FluentGridItem>
@@ -96,6 +109,8 @@
     [SupplyParameterFromForm]
     private CreateItem Model { get; set; } = new();
 
+    [Parameter]
+    public EventCallback<string> OnKanjiChanged { get; set; }
 
     public IEnumerable<string> Strings = Enumerable.Empty<string>();
 
@@ -109,6 +124,12 @@
         Logger.LogInformation("HandleValidSubmit called");
 
         Strings = generator.GenerateLorem(Model.Number, Model.Size, false, Model.Japanese);
+    }
+
+    protected async Task Delete_Click()
+    {
+        await OnKanjiChanged.InvokeAsync(DateTime.Now.ToString());
+        //NavigationManager.NavigateTo("/", true);
     }
 
     public class CreateItem
