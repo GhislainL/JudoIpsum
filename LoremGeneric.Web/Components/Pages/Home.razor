@@ -35,6 +35,12 @@
                         <span slot="unchecked-message">English</span>
                     </FluentSwitch>
                 </div>
+                <div>
+                    <FluentSwitch id="technicsSwitch" @bind-Value=Model.Jujitsu Label="Add Jujitsu technics" onchange="changeTechnics()">
+                        <span slot="checked-message">Jujitsu</span>
+                        <span slot="unchecked-message">Judo</span>
+                    </FluentSwitch>
+                </div>
                 <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">Generate</FluentButton>
             </FluentStack>
         </EditForm>
@@ -47,23 +53,37 @@
 
 <FluentGridItem xs="6">
     <div class="card">
-
-        <div id="generatedText">
-            @foreach (string item in Strings)
-            {
-                <p>
-                    @item
-                </p>
-            }
-        </div>
-
-        <button type="button" class="btn btn-danger m-1" onclick="changeKanji()">
-            Kanji
-        </button>
-        <fluent-button type="button" appearance="outline" class="outline" onclick="copyToClipboard()">
-            Outline Copy to clipboard
-        </fluent-button>
+        @if (Strings.Count() > 0)
+        {
+            <div id="generatedText">
+                @foreach (string item in Strings)
+                {
+                    <p>
+                        @item
+                    </p>
+                }
+            </div>
+            <fluent-button type="button" appearance="outline" class="outline" onclick="copyToClipboard()">
+                Outline Copy to clipboard
+            </fluent-button>
+        }
         <script>
+            function changeTechnics() {
+                console.log("changeTechnics");
+
+                var el2 = document.getElementById("technicsSwitch");
+                console.log(el2.classList);
+
+                var k = document.getElementById("kanji");
+
+                if (el2.classList.contains("checked")) {
+                    k.src = "/images/judo-kanji.png";
+                }
+                else {
+                    k.src = "/images/jujitsu-kanji.png";
+                }
+            }
+
             function copyToClipboard() {
                 let text = document.getElementById("generatedText").innerText;
                 navigator.clipboard.writeText(text).then(
@@ -87,17 +107,6 @@
                     console.log("cannot use your clipboard");
                 }
             }
-
-            function changeKanji() {
-                var k = document.getElementById("kanji");
-                console.log(k.src);
-                if (k.src.endsWith("jujitsu-kanji.png")) {
-                    k.src = "/images/judo-kanji.png";
-                }
-                else {
-                    k.src = "/images/jujitsu-kanji.png";
-                }
-            }
         </script>
     </div>
 </FluentGridItem>
@@ -108,9 +117,6 @@
 @code {
     [SupplyParameterFromForm]
     private CreateItem Model { get; set; } = new();
-
-    [Parameter]
-    public EventCallback<string> OnKanjiChanged { get; set; }
 
     public IEnumerable<string> Strings = Enumerable.Empty<string>();
 
@@ -123,13 +129,7 @@
     {
         Logger.LogInformation("HandleValidSubmit called");
 
-        Strings = generator.GenerateLorem(Model.Number, Model.Size, false, Model.Japanese);
-    }
-
-    protected async Task Delete_Click()
-    {
-        await OnKanjiChanged.InvokeAsync(DateTime.Now.ToString());
-        //NavigationManager.NavigateTo("/", true);
+        Strings = generator.GenerateLorem(Model.Number, Model.Size, false, Model.Japanese, Model.Jujitsu);
     }
 
     public class CreateItem
@@ -137,5 +137,7 @@
         public int Number { get; set; } = 2;
         public ParagraphSize Size { get; set; } = ParagraphSize.medium;
         public bool Japanese { get; set; }
+        public bool Jujitsu { get; set; }
+
     }
 }

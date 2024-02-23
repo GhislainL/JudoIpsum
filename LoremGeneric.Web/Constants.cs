@@ -121,6 +121,58 @@ internal static class Constants
 
     ];
 
+
+    private static readonly string[] DicoAtemi =
+    [
+        "Tsukkake",
+        "Tsuki-kake",
+        "Mae-naname-ate",
+        "Naname-tsuki",
+        "Mawashi-tsuki",
+        "Tsuki-age",
+        "Ago-tsuki",
+        "Uchi-oroshi",
+        "Uchi-kake",
+        "Yoko-ate",
+        "Yoko-uchi",
+        "Gammen-tsuki",
+        "Kami-ate",
+        "Ue-ate",
+        "Shimo-tsuki",
+        "Ushiro-sumi-tsuki",
+        "Ushiro-uchi",
+        "Ushiro-tsuki",
+        "Ryote-tsuki",
+        "Mae-hiji-ate",
+        "Ushiro-hiji-ate",
+        "Age-hiji-ate",
+        "Shita-hiji-ate",
+        "Oroshi-hiji-ate",
+        "Kirioroshi",
+        "Naname-uchi",
+        "Tsuki-dashi",
+        "Ryogan-tsuki",
+        "Suri-age",
+        "Yahazu",
+        "Me-tsubushi",
+        "Mae-geri",
+        "Mae-naname-geri",
+        "Naname-geri",
+        "Mawashi-geri",
+        "Taka-geri",
+        "Yoko-geri",
+        "Ushiro-geri",
+        "Ashi-fumi",
+        "Mae-hiza-ate",
+        "Yoko-hiza-ate",
+        "Hiza-otoshi",
+        "Mae-atama-ate",
+        "Ushiro-atama-ate",
+        "Atama-tsuki"
+    ];
+
+    public static readonly string[] DicoJujitsu = [.. Dico, .. DicoAtemi];
+
     public static readonly string[] DicoJapan =
     [
         "背負投",
