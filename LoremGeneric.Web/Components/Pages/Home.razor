@@ -30,18 +30,12 @@
                     </FluentRadioGroup>
                 </div>
                 <div>
-                    <FluentSwitch @bind-Value=Model.Japanese Label="Use japanese">
-                        <span slot="checked-message">Japanese</span>
-                        <span slot="unchecked-message">English</span>
-                    </FluentSwitch>
-                </div>
-                <div>
                     <FluentSwitch id="technicsSwitch" @bind-Value=Model.Jujitsu Label="Add Jujitsu technics" onchange="changeTechnics()">
                         <span slot="checked-message">Jujitsu</span>
                         <span slot="unchecked-message">Judo</span>
                     </FluentSwitch>
                 </div>
-                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent">Generate</FluentButton>
+                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" BackgroundColor="#000">Generate</FluentButton>
             </FluentStack>
         </EditForm>
     </div>
@@ -77,10 +71,10 @@
                 var k = document.getElementById("kanji");
 
                 if (el2.classList.contains("checked")) {
-                    k.src = "/images/judo-kanji.png";
+                    k.src = "/images/judo-kanji-nb-min.png";
                 }
                 else {
-                    k.src = "/images/jujitsu-kanji.png";
+                    k.src = "/images/jujitsu-kanji-nb-min.png";
                 }
             }
 
@@ -129,7 +123,7 @@
     {
         Logger.LogInformation("HandleValidSubmit called");
 
-        Strings = generator.GenerateLorem(Model.Number, Model.Size, false, Model.Japanese, Model.Jujitsu);
+        Strings = generator.GenerateLorem(Model.Number, Model.Size, false, Model.Jujitsu);
     }
 
     public class CreateItem

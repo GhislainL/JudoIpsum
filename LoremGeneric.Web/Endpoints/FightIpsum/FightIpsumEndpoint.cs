@@ -30,14 +30,14 @@ public static class FightIpsumEndpoint
     }
 
 
-    static IResult GetGeneratedLorem([FromServices] IFightIpsumService generatorService, int number, int size, bool japanese, bool jujitsu)
+    static IResult GetGeneratedLorem([FromServices] IFightIpsumService generatorService, int number, int size, bool jujitsu)
     {
         if (number > 10) number = 10;
         if (size > 2) size = 2;
 
         ParagraphSize pSize = (ParagraphSize)size;
 
-        IEnumerable<string> res = generatorService.GenerateLorem(number, pSize, false, japanese, jujitsu);
+        IEnumerable<string> res = generatorService.GenerateLorem(number, pSize, false, jujitsu);
         return TypedResults.Ok(res);
     }
 }
