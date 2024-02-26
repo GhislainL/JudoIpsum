@@ -7,12 +7,12 @@
 
 @inject ILogger<Home> Logger
 
-<PageTitle>Fight Ipsum</PageTitle>
+<PageTitle>JudoIpsum - Lorem Ipsum with judo-jujitsu techniques</PageTitle>
 
 <FluentGridItem xs="4">
 </FluentGridItem>
 
-<FluentGridItem xs="4">
+<FluentGridItem xs="4" Justify="JustifyContent.Center">
     <div class="card">
         <EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit" FormName="organization_create" novalidate>
             <DataAnnotationsValidator />
@@ -20,7 +20,7 @@
 
             <FluentStack Orientation="Orientation.Vertical">
                 <div>
-                    <FluentNumberField @bind-Value="Model.Number" Label="# Paragraph" />
+                    <FluentNumberField @bind-Value="Model.Number" Min="1" Max="10" Label="number of paragraphs" />
                 </div>
                 <div>
                     <FluentRadioGroup Name="Size" @bind-Value="Model.Size" Label="Size">
@@ -35,7 +35,9 @@
                         <span slot="unchecked-message">Judo</span>
                     </FluentSwitch>
                 </div>
-                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" BackgroundColor="#000">Generate</FluentButton>
+                <div style="text-align:center;width:100%;padding-top:10px;">
+                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" BackgroundColor="#000">Generate</FluentButton>
+                </div>
             </FluentStack>
         </EditForm>
     </div>
@@ -45,68 +47,54 @@
 <FluentGridItem xs="3">
 </FluentGridItem>
 
-<FluentGridItem xs="6">
+<FluentGridItem xs="6" Justify="JustifyContent.Center">
     <div class="card">
         @if (Strings.Count() > 0)
         {
             <div id="generatedText">
                 @foreach (string item in Strings)
                 {
-                    <p>
+                    <p style="text-align:justify">
                         @item
                     </p>
                 }
             </div>
-            <fluent-button type="button" appearance="outline" class="outline" onclick="copyToClipboard()">
-                Outline Copy to clipboard
-            </fluent-button>
+            <div style="text-align:center;">
+                <fluent-button type="button" appearance="outline" class="outline" onclick="copyToClipboard()">
+                    Outline Copy to clipboard
+                </fluent-button>
+            </div>
         }
-        <script>
-            function changeTechnics() {
-                console.log("changeTechnics");
-
-                var el2 = document.getElementById("technicsSwitch");
-                console.log(el2.classList);
-
-                var k = document.getElementById("kanji");
-
-                if (el2.classList.contains("checked")) {
-                    k.src = "/images/judo-kanji-nb-min.png";
-                }
-                else {
-                    k.src = "/images/jujitsu-kanji-nb-min.png";
-                }
-            }
-
-            function copyToClipboard() {
-                let text = document.getElementById("generatedText").innerText;
-                navigator.clipboard.writeText(text).then(
-                    () => {
-                        /* clipboard successfully set */
-                        console.log("success");
-                    },
-                    () => {
-                        /* clipboard write failed */
-                        console.log("failure");
-                    },
-                );
-            }
-
-            function copyToClipboard2() {
-                try {
-                    let text = document.getElementById("generatedText").innerText;
-                    navigator.clipboard.writeText(text);
-                }
-                catch (error) {
-                    console.log("cannot use your clipboard");
-                }
-            }
-        </script>
     </div>
 </FluentGridItem>
 <FluentGridItem xs="3">
 </FluentGridItem>
 
+<script type="text/javascript">
+    function changeTechnics() {
+        var el2 = document.getElementById("technicsSwitch");
+        var k = document.getElementById("kanji");
+
+        if (el2.classList.contains("checked")) {
+            k.src = "/images/judo-kanji-nb-min.png";
+        }
+        else {
+            k.src = "/images/jujitsu-kanji-nb-min.png";
+        }
+    }
+
+    function copyToClipboard() {
+        let text = document.getElementById("generatedText").innerText;
+        navigator.clipboard.writeText(text).then(
+            () => {
+                console.log("Successfully copied to clipboard !");
+            },
+            () => {
+                console.log("Cannot use your clipboard !");
+            },
+        );
+    }
+</script>
 
 @code {
     [SupplyParameterFromForm]
@@ -130,8 +118,6 @@
     {
         public int Number { get; set; } = 2;
         public ParagraphSize Size { get; set; } = ParagraphSize.medium;
-        public bool Japanese { get; set; }
         public bool Jujitsu { get; set; }
-
     }
 }

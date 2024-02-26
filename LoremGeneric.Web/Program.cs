@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+#if DEBUG
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -22,28 +24,34 @@ builder.Services.AddRateLimiter(options =>
             })
     );
 });
+#else
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("API", httpcontext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpcontext.Request.Headers["X-Forwarded-For"].ToString(),
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1)
+            })
+    );
+});
+#endif
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddFluentUIComponents();
 
-//builder.Services.AddHttpClient("MyApp", c =>
-//{
-//    c.BaseAddress = new Uri("https://localhost:7088/api/");
-//});
-
 builder.Services.AddScoped<IFightIpsumService, FightIpsumService>();
 
 var app = builder.Build();
 
 app.UseRateLimiter();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
