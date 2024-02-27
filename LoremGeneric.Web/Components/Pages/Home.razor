@@ -19,6 +19,11 @@
             <FluentValidationSummary />
 
             <FluentStack Orientation="Orientation.Vertical">
+                <div style="text-align:center;width:100%;font-size:large;padding:10px 0 20px 0">
+                    a Lorem Ipsum generator <br/>
+                    <span style="font-size:medium">with</span><br />
+                    judo and jujitsu techniques
+                </div>
                 <div>
                     <FluentNumberField @bind-Value="Model.Number" Min="1" Max="10" Label="number of paragraphs" />
                 </div>
@@ -35,7 +40,7 @@
                         <span slot="unchecked-message">Judo</span>
                     </FluentSwitch>
                 </div>
-                <div style="text-align:center;width:100%;padding-top:10px;">
+                <div style="text-align:center;width:100%;padding-top:15px;">
                     <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" BackgroundColor="#000">Generate</FluentButton>
                 </div>
             </FluentStack>
