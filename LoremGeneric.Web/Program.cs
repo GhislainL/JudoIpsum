@@ -10,6 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
+
 #if DEBUG
 builder.Services.AddRateLimiter(options =>
 {
@@ -49,6 +54,7 @@ builder.Services.AddScoped<IFightIpsumService, FightIpsumService>();
 
 var app = builder.Build();
 
+app.UseResponseCompression();
 app.UseRateLimiter();
 app.UseSwagger();
 app.UseSwaggerUI();
